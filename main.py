@@ -1,10 +1,15 @@
-class Task:
-    def __init__(self):
-        self.name = ""
-        self.reads = []
-        self.writes = []
-        self.run = None
+import threading  # importer la Librairie pour la gestion des Threads
 
+
+# classe de Tâche
+class Task:
+    def __init__(self, name, reads, writes, run):  # constructeur de la class Task
+        self.name = name
+        self.reads = reads
+        self.writes = writes
+        self.run = run
+
+    # utilisation de Getter pour récuperer les attributs
     def getName(self):
         return self.name
 
