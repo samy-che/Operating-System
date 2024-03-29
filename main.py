@@ -3,7 +3,8 @@ import threading  # importer la Librairie pour la gestion des Threads
 
 # classe de Tâche
 class Task:
-    def __init__(self, name, reads, writes, run):  # constructeur de la class Task
+    # constructeur de la class Task avec parametre
+    def __init__(self, name, reads, writes, run):
         self.name = name
         self.reads = reads
         self.writes = writes
@@ -20,24 +21,11 @@ class Task:
         return self.writes
 
 
-X = None
-Y = None
-Z = None
+class TaskSystem:
+    def __init__(self, task, parent):
+        self.task = task
+        self.parent = parent
 
-
-def runT1():
-    global X
-    X = 1
-    print("exection de t1 : ", X)
-
-
-def runT2():
-    global Y
-    Y = 2
-    print("execution de t2 :", Y)
-
-
-def runTsomme():
-    global X, Y, Z
-    Z = X + Y
-    print("execution de tsomme : ", Z)
+    # renvoie la liste des taches qui s'excute avant la tache passer en parametre
+    def getDependencies(self, task_name):
+        return self.parent.get(task_name, [])
