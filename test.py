@@ -20,3 +20,5 @@ tsomme.run = runTsomme
 t1.run()
 t2.run()
 tsomme.run()
+
+#test de git 
