@@ -27,6 +27,9 @@ t1 = Task("T1", [], ["X"], runT1)
 t2 = Task("T2", ["X"], ["Y"], runT2)
 tSomme = Task("somme", ["X", "Y"], ["Z"], runTsomme)
 
+s1 = TaskSystem([t1, t2, tSomme], {"T1": [], "T2": [
+    "T1"], "somme": ["T1", "T2"]})
+
 t1.run()
 t2.run()
 tSomme.run()
