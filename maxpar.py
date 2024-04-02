@@ -17,9 +17,22 @@ class TaskSystem:
         self.parent = parent
         self.valid()
 
-    # renvoie la liste des taches qui s'excute avant la tache passer en parametre
-    def getDependencies(self, task_name):
-        return self.parent.get(task_name, [])
+    # renvoie la liste de dependence pour une tache selon le système de parallélisme maximal
+    def getDependencies(self, nomTache):
+
+        # si la tache n'a aucune dependance cas exeptionel
+        if self.parent["nomTache"] == []:
+            return self.parent["nomTache"]
+        else:
+            # pour chaque dependance de notre tache :
+            for element in self.parent["nomTache"]:
+                # pour la dependence on verifie si parmis ces dependance y'en a une qui appartient a la liste de dependence de nomTache
+                for dependance in self.parent["element"]:
+                    if dependance in self.parent["nomTache"]:
+                        # supprimer la dependance qui sert a rien de la liste
+                        self.parent["nomTache"].remove(dependance)
+
+        return self.parent["nomTache"]
 
     def valid(self):
         # vérifie que les noms des tâches sont uniques

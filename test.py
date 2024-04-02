@@ -1,4 +1,4 @@
-from main import *
+from maxpar import *
 
 X = None
 Y = None
