@@ -1,4 +1,6 @@
 import threading  # importer la Librairie pour la gestion des Threads
+import random
+import time
 import networkx
 import matplotlib.pyplot as plt
 
@@ -126,7 +128,7 @@ class TaskSystem:
                     print(nomt1.name, "n'est pas dans les précédences de", nomt2.name)
                     break
 
-    # comm
+    # fonction de parrallesime maximal
     def parMax(self):
         for tache in self.task:
             for tache2 in self.task:
@@ -135,7 +137,6 @@ class TaskSystem:
                     self.ParaTache(tache, tache2)
 
     # renvoie la liste de dependence pour une tache selon le système de parallélisme maximal,
-
     def getDependencies(self, task):
 
         # si la tache n'a aucune dependance cas exeptionel
