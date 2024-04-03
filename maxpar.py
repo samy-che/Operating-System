@@ -12,68 +12,6 @@ class Task:
         self.writes = writes
         self.run = run
 
-    # fonction qui prend deux taches qui renvoie false si il y a une intérférence entre les taches
-    def bernstein(t1, t2):
-        for i in t1.writes:
-            for j in t2.writes:
-                if (i == j):
-                    print("interferance domaine d'écriture entre",
-                          t1.name, t2.name)
-                    return False
-        for i in t1.reads:
-            for j in t2.writes:
-                if (i == j):
-                    print("inteferance entre le domaine de lecture de",
-                          t1.name, "et le domaine d'ecriture de", t2.name)
-                    return False
-        for i in t1.writes:
-            for j in t2.reads:
-                if (i == j):
-                    print("inteferance entre le domaine d'ecriture de",
-                          t1.name, "et le domaine de lecture de", t2.name)
-                    return False
-
-        return True
-
-    # Fonction de suppression d'interférence
-    def SupprInter(nomt1, nomt2):
-        if not bernstein(nomt1, nomt2):  # vérifie s'il y a une interferance
-            for i in dico[nomt1.name]:  # parcours les précédences de la tache 1
-                if (i == nomt2.name):  # Est ce que t2 est deja dans les precedences de t1 ?
-                    print(nomt2.name, " précéde ", nomt1.name)
-                    return False
-            if (dico[nomt2.name] == []):  # si t2 n'a pas de precedences
-                # ajout de t1 dans les precedences de t2
-                dico[nomt2.name].append(nomt1.name)
-                return False
-            for i in dico[nomt2.name]:  # parcours les précédences de la tache 2
-                if (i == nomt1.name):  # Est ce que t1 est deja dans les precedences de t2 ?
-                    print(nomt1.name, " précéde ", nomt2.name)
-                    return False
-                else:
-                    # ajout de t1 dans les précédence de t2
-                    dico[nomt2.name].append(nomt1.name)
-                    print("ajout de "+nomt1.name +
-                          " dans les précédences "+nomt2.name)
-
-        else:
-            print("Aucune interferance entre les deux taches " +
-                  nomt1.name + " et " + nomt2.name)
-            return True
-
-    # Paralléliser les taches qui n'ont pas d'interférences
-    def ParaTache(nomt1, nomt2):
-        if bernstein(nomt1, nomt2):  # s'il n'y a pas d'interférance
-            for i in dico[nomt2.name]:
-                if (i == nomt1.name):
-                    # suppression de t1 dans les précédences de t2
-                    dico[nomt2.name].remove(nomt1.name)
-                    print("Supression de ", nomt1.name,
-                          " dans les précédences de ", nomt2.name)
-                else:
-                    print(nomt1.name, "n'est pas dans les précédences de", nomt2.name)
-                    break
-
 
 class TaskSystem:
     def __init__(self, task, dico):
@@ -126,12 +64,75 @@ class TaskSystem:
                     raise ValueError(
                         f"La dépendance {dep} n'est pas dans la liste des tâches")
 
+    # fonction qui prend deux taches qui renvoie false si il y a une intérférence entre les taches
+    def bernstein(self, t1, t2):
+        for i in t1.writes:
+            for j in t2.writes:
+                if (i == j):
+                    print("interferance domaine d'écriture entre",
+                          t1.name, t2.name)
+                    return False
+        for i in t1.reads:
+            for j in t2.writes:
+                if (i == j):
+                    print("inteferance entre le domaine de lecture de",
+                          t1.name, "et le domaine d'ecriture de", t2.name)
+                    return False
+        for i in t1.writes:
+            for j in t2.reads:
+                if (i == j):
+                    print("inteferance entre le domaine d'ecriture de",
+                          t1.name, "et le domaine de lecture de", t2.name)
+                    return False
+
+        return True
+
+    # Fonction de suppression d'interférence
+    def SupprInter(self, nomt1, nomt2):
+        if not self.bernstein(nomt1, nomt2):  # vérifie s'il y a une interferance
+            for i in self.dico[nomt1.name]:  # parcours les précédences de la tache 1
+                if (i == nomt2.name):  # Est ce que t2 est deja dans les precedences de t1 ?
+                    print(nomt2.name, " précéde ", nomt1.name)
+                    return False
+            if (self.dico[nomt2.name] == []):  # si t2 n'a pas de precedences
+                # ajout de t1 dans les precedences de t2
+                self.dico[nomt2.name].append(nomt1.name)
+                return False
+            for i in self.dico[nomt2.name]:  # parcours les précédences de la tache 2
+                if (i == nomt1.name):  # Est ce que t1 est deja dans les precedences de t2 ?
+                    print(nomt1.name, " précéde ", nomt2.name)
+                    return False
+                else:
+                    # ajout de t1 dans les précédence de t2
+                    self.dico[nomt2.name].append(nomt1.name)
+                    print("ajout de "+nomt1.name +
+                          " dans les précédences "+nomt2.name)
+
+        else:
+            print("Aucune interferance entre les deux taches " +
+                  nomt1.name + " et " + nomt2.name)
+            return True
+
+    # Paralléliser les taches qui n'ont pas d'interférences
+    def ParaTache(self, nomt1, nomt2):
+        if self.bernstein(nomt1, nomt2):  # s'il n'y a pas d'interférance
+            for i in self.dico[nomt2.name]:
+                if (i == nomt1.name):
+                    # suppression de t1 dans les précédences de t2
+                    self.dico[nomt2.name].remove(nomt1.name)
+                    print("Supression de ", nomt1.name,
+                          " dans les précédences de ", nomt2.name)
+                else:
+                    print(nomt1.name, "n'est pas dans les précédences de", nomt2.name)
+                    break
+
+    # comm
     def parMax(self):
-        for tache in task:
-            for tache2 in task:
+        for tache in self.task:
+            for tache2 in self.task:
                 if (tache != tache2):
-                    SupprInter(tache, tache2)
-                    ParaTache(tache, tache2)
+                    self.SupprInter(tache, tache2)
+                    self.ParaTache(tache, tache2)
 
     # renvoie la liste de dependence pour une tache selon le système de parallélisme maximal,
 
@@ -161,6 +162,26 @@ class TaskSystem:
             task = next(t for t in self.task if t.name == task_name)
             task.run()
 
+    # exécute les tâches selon la spécification du parallélisme maximal
+    def run(self):
+        task_ord = list(networkx.topological_sort(self.graph))
+        # crée une liste vide pour stocker les threads qui seront créés
+        threads = []
+
+        # parcour les tâches dans l'ordre obtenu
+        for task_name in task_ord:
+            # trouve l'instance de la tâche correspondante à partir de son nom
+            task = next(t for t in self.task if t.name == task_name)
+            # crée un nouveau thread pour exécuter la fonction "run" de la tâche
+            thread = threading.Thread(target=task.run)
+            thread.start()
+            # ajoute le thread à la liste des threads
+            threads.append(thread)
+
+        # attend que tous les threads aient terminé
+        for thread in threads:
+            thread.join()
+
      # affiche graphiquement le grahe de précédence en utilisant la bilbiothèque "networkx"
     def draw(self):
         # crée un graphe dirigé vide
@@ -180,3 +201,54 @@ class TaskSystem:
                       node_color="lightblue", font_size=10, font_weight="bold")
         plt.show()
         return graph
+
+    # teste le déterminsime du système en effectuant avec des valeurs aléatoires, différentes exécutions parrallèles du système
+    def detTestRnd(self, test=100):
+        for _ in range(test):
+            # génére des valeurs aléatoires pour les variables X, Y et Z
+            self.X = random.randint(1, 100)
+            self.Y = random.randint(1, 100)
+            self.Z = random.randint(1, 100)
+
+            # exécute les tâches en parallèle avec le premier jeu de valeurs
+            self.run()
+            resultat1 = (self.X, self.Y, self.Z)
+
+            # réinitialise les variables avec les mêmes valeurs aléatoires
+            self.X = random.randint(1, 100)
+            self.Y = random.randint(1, 100)
+            self.Z = random.randint(1, 100)
+
+            # exécute les tâches en parallèle avec le second jeu de valeurs
+            self.run()
+            resultat2 = (self.X, self.Y, self.Z)
+
+            # compare les résultats des deux exécutions parallèles
+            if resultat1 != resultat2:
+                print("Le système n'est pas déterministe")
+                return
+        print(
+            f"Après {test} tests, on peut conclure que le système est déterministe")
+
+    # compare les temps d'exécutions séquentielle et parrallèle du système de tâche
+    def parCost(self):
+        runs = 100
+        seq_time = []
+        par_time = []
+
+        for _ in range(runs):
+            start_time = time.perf_counter()
+            self.runSeq()
+            end_time = time.perf_counter()
+            seq_time.append(end_time - start_time)
+
+            start_time = time.perf_counter()
+            self.run()
+            end_time = time.perf_counter()
+            par_time.append(end_time - start_time)
+
+        avg_seq_time = sum(seq_time) / runs
+        avg_par_time = sum(par_time) / runs
+
+        print(f"Temps d'exécution moyen en séquentiel : {avg_seq_time:.4f} s")
+        print(f"Temps d'exécution moyen en parallèle : {avg_par_time:.4f} s")
