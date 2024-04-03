@@ -126,6 +126,13 @@ class TaskSystem:
                     raise ValueError(
                         f"La dépendance {dep} n'est pas dans la liste des tâches")
 
+    def parMax(self):
+        for tache in task:
+            for tache2 in task:
+                if (tache != tache2):
+                    SupprInter(tache, tache2)
+                    ParaTache(tache, tache2)
+
     # renvoie la liste de dependence pour une tache selon le système de parallélisme maximal,
 
     def getDependencies(self, task):
