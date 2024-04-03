@@ -12,7 +12,8 @@ class Task:
         self.writes = writes
         self.run = run
 
-    def bernstein(t1, t2):  # fonction qui prend deux taches qui renvoie false si il y a une intérférence entre les taches
+    # fonction qui prend deux taches qui renvoie false si il y a une intérférence entre les taches
+    def bernstein(t1, t2):
         for i in t1.writes:
             for j in t2.writes:
                 if (i == j):
@@ -34,6 +35,45 @@ class Task:
 
         return True
 
+    # Fonction de suppression d'interférence
+    def SupprInter(nomt1, nomt2):
+        if not bernstein(nomt1, nomt2):  # vérifie s'il y a une interferance
+            for i in dico[nomt1.name]:  # parcours les précédences de la tache 1
+                if (i == nomt2.name):  # Est ce que t2 est deja dans les precedences de t1 ?
+                    print(nomt2.name, " précéde ", nomt1.name)
+                    return False
+            if (dico[nomt2.name] == []):  # si t2 n'a pas de precedences
+                # ajout de t1 dans les precedences de t2
+                dico[nomt2.name].append(nomt1.name)
+                return False
+            for i in dico[nomt2.name]:  # parcours les précédences de la tache 2
+                if (i == nomt1.name):  # Est ce que t1 est deja dans les precedences de t2 ?
+                    print(nomt1.name, " précéde ", nomt2.name)
+                    return False
+                else:
+                    # ajout de t1 dans les précédence de t2
+                    dico[nomt2.name].append(nomt1.name)
+                    print("ajout de "+nomt1.name +
+                          " dans les précédences "+nomt2.name)
+
+        else:
+            print("Aucune interferance entre les deux taches " +
+                  nomt1.name + " et " + nomt2.name)
+            return True
+
+    # Paralléliser les taches qui n'ont pas d'interférences
+    def ParaTache(nomt1, nomt2):
+        if bernstein(nomt1, nomt2):  # s'il n'y a pas d'interférance
+            for i in dico[nomt2.name]:
+                if (i == nomt1.name):
+                    # suppression de t1 dans les précédences de t2
+                    dico[nomt2.name].remove(nomt1.name)
+                    print("Supression de ", nomt1.name,
+                          " dans les précédences de ", nomt2.name)
+                else:
+                    print(nomt1.name, "n'est pas dans les précédences de", nomt2.name)
+                    break
+
 
 class TaskSystem:
     def __init__(self, task, dico):
@@ -52,22 +92,22 @@ class TaskSystem:
             # vérifie que les noms des tâches ne sont pas vide
             if task_names[i] == "":
                 raise ValueError(
-                    "La tâche à l'indice {} dans le système de tâches n'a pas de nom".format(i))
+                    "La tâche à l'indicoe {} dans le système de tâches n'a pas de nom".format(i))
 
-            # vérifie que toutes les tâches du système de tâches font partie du dictionnaire.
+            # vérifie que toutes les tâches du système de tâches font partie du dicotionnaire.
             temp = False
             for key in self.dico.keys():
                 if task_names[i] == key:
                     temp = True
             if temp == False:
                 raise ValueError(
-                    "La tâche à l'indice {} dans le système des tâches ne fait pas partie du dictionnaire.".format(i))
+                    "La tâche à l'indicoe {} dans le système des tâches ne fait pas partie du dicotionnaire.".format(i))
 
         for key in self.dico.keys():
             # vérifie la cohérence entre les noms des tâches dans la liste des tâches et ceux dans le graphe de précédence
             if key not in task_names:
                 raise ValueError(
-                    f"Le nom de tâche {key} dans le dictionnaire de précédence n'est pas dans la liste des tâches")
+                    f"Le nom de tâche {key} dans le dicotionnaire de précédence n'est pas dans la liste des tâches")
 
              # vérifie que la clé "tâche" ne doit pas être précéder par elle-même.
             if key in self.dico[key]:
@@ -87,6 +127,7 @@ class TaskSystem:
                         f"La dépendance {dep} n'est pas dans la liste des tâches")
 
     # renvoie la liste de dependence pour une tache selon le système de parallélisme maximal,
+
     def getDependencies(self, task):
 
         # si la tache n'a aucune dependance cas exeptionel
