@@ -12,6 +12,28 @@ class Task:
         self.writes = writes
         self.run = run
 
+    def bernstein(t1, t2):  # fonction qui prend deux taches qui renvoie false si il y a une intérférence entre les taches
+        for i in t1.writes:
+            for j in t2.writes:
+                if (i == j):
+                    print("interferance domaine d'écriture entre",
+                          t1.name, t2.name)
+                    return False
+        for i in t1.reads:
+            for j in t2.writes:
+                if (i == j):
+                    print("inteferance entre le domaine de lecture de",
+                          t1.name, "et le domaine d'ecriture de", t2.name)
+                    return False
+        for i in t1.writes:
+            for j in t2.reads:
+                if (i == j):
+                    print("inteferance entre le domaine d'ecriture de",
+                          t1.name, "et le domaine de lecture de", t2.name)
+                    return False
+
+        return True
+
 
 class TaskSystem:
     def __init__(self, task, dico):
