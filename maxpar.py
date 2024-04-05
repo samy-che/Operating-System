@@ -128,7 +128,7 @@ class TaskSystem:
                     print(nomt1.name, "n'est pas dans les précédences de", nomt2.name)
                     break
 
-    # fonction de parrallesime maximal
+    # fonction de parrallelisme maximal
     def parMax(self):
         for tache in self.task:
             for tache2 in self.task:

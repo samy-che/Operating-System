@@ -35,3 +35,6 @@ s1 = TaskSystem([t1, t2, tSomme, t4, t5], {"T1": [], "T2": [
 t1.run()
 t2.run()
 tSomme.run()
+s1.runSeq()
+s1.run()
+s1.draw()
